@@ -20,7 +20,7 @@ export const SkillGapPage: React.FC = () => {
   const requiredSkillList = resolved.missing_skills;
 
   // Append user's existing skills as matched skills
-  const matchedSkills = existingSkills.map(s => ({
+  const matchedSkills = existingSkills.map((s: string) => ({
     skill: `${s} (Captured Experience)`,
     severity: 'Low' as const,
     missing: false

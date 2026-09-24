@@ -36,10 +36,11 @@ const defaultSitaBeneficiary: Beneficiary = {
   mobility_km: 15,
   physical_constraints: 'None',
   digital_literacy: 'basic',
-  income_category: 'BPL / PM-AJAY Beneficiary Target',
   status: 'analyzed',
   created_at: new Date().toISOString()
 };
+
+const BeneficiaryContext = createContext<BeneficiaryContextType | undefined>(undefined);
 
 export const BeneficiaryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [beneficiary, setBeneficiary] = useState<Beneficiary | null>(null);

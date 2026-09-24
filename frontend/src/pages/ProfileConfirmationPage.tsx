@@ -207,11 +207,8 @@ export const ProfileConfirmationPage: React.FC = () => {
 
         {/* Existing Skills List */}
         <div className="border-t pt-4">
-          <span className="text-slate-600 font-semibold text-xs block mb-2">
-            सध्याची व्यावहारिक कौशल्ये (Captured Practical Skills):
-          </span>
           <div className="flex flex-wrap gap-2">
-            {(beneficiary?.existing_skills || ['Basic Farming', 'Hand Tools Handling']).map((skill, idx) => (
+            {(beneficiary?.existing_skills || ['Basic Work Skills']).map((skill: string, idx: number) => (
               <span key={idx} className="bg-emerald-50 text-emerald-900 border border-emerald-300 text-xs font-semibold px-3 py-1 rounded-full">
                 ✓ {skill}
               </span>
