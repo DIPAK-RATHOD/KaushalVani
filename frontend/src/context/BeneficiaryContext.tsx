@@ -41,13 +41,11 @@ const defaultSitaBeneficiary: Beneficiary = {
   created_at: new Date().toISOString()
 };
 
-const BeneficiaryContext = createContext<BeneficiaryContextType | undefined>(undefined);
-
 export const BeneficiaryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [beneficiary, setBeneficiary] = useState<Beneficiary | null>(defaultSitaBeneficiary);
+  const [beneficiary, setBeneficiary] = useState<Beneficiary | null>(null);
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
-  const [interviewStep, setInterviewStep] = useState<number>(2);
+  const [interviewStep, setInterviewStep] = useState<number>(1);
 
   const resetSession = () => {
     setBeneficiary(null);

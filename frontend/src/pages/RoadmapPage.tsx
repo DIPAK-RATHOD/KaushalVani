@@ -10,13 +10,13 @@ export const RoadmapPage: React.FC = () => {
   };
 
   const userName = beneficiary?.name || 'Beneficiary User';
-  const userAge = beneficiary?.age || 24;
-  const userDistrict = beneficiary?.district || 'Aurangabad';
+  const userAge = beneficiary?.age || 20;
+  const userDistrict = beneficiary?.district || 'Chhatrapati Sambhajinagar';
   const userEdu = beneficiary?.education || '10th Class Pass';
-  const currentOcc = beneficiary?.current_occupation || 'Agricultural Laborer';
-  const desiredRole = beneficiary?.desired_occupation || 'Solar Energy & Electrical Installation';
+  const currentOcc = beneficiary?.current_occupation || 'General Worker';
+  const desiredRole = beneficiary?.desired_occupation || 'Vocational & Enterprise Pathway';
   const userMobility = beneficiary?.mobility_km || 15;
-  const existingSkillsList = (beneficiary?.existing_skills || ['Basic Farming', 'Hand Tools Handling']).join(', ');
+  const existingSkillsList = (beneficiary?.existing_skills || ['Practical Experience']).join(', ');
 
   const steps = [
     {

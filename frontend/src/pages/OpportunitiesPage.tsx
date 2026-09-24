@@ -9,9 +9,9 @@ export const OpportunitiesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'wage' | 'enterprise'>('wage');
 
   const userName = beneficiary?.name || 'Beneficiary User';
-  const userDistrict = beneficiary?.district || 'Aurangabad';
+  const userDistrict = beneficiary?.district || 'Chhatrapati Sambhajinagar';
   const userEdu = beneficiary?.education || '10th Class Pass';
-  const desiredRole = beneficiary?.desired_occupation || 'Solar Energy & Electrical Installation';
+  const desiredRole = beneficiary?.desired_occupation || 'Technical & Vocational Skills';
 
   const wageJobs = [
     {

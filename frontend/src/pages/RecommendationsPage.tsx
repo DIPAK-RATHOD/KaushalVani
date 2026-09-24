@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBeneficiary } from '../context/BeneficiaryContext';
+import { resolveQualification } from '../utils/nqrResolver';
 import { Award, CheckCircle2, ExternalLink, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const RecommendationsPage: React.FC = () => {
@@ -8,72 +9,12 @@ export const RecommendationsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const userName = beneficiary?.name || 'Beneficiary User';
-  const desired = (beneficiary?.desired_occupation || 'Solar Energy & Electrical Installation').toLowerCase();
-  const userDistrict = beneficiary?.district || 'Aurangabad';
+  const desired = beneficiary?.desired_occupation || 'Technical & Vocational Skills';
+  const userDistrict = beneficiary?.district || 'Chhatrapati Sambhajinagar';
   const userEdu = beneficiary?.education || '10th Class Pass';
 
   // Dynamic qualification mapping based on user's actual desired occupation
-  let primaryQual = {
-    id: 'qual-001',
-    qp_code: 'ELE/Q5901',
-    job_role: 'Solar PV System Installer',
-    sector: 'Electronics & Hardware / Renewable Energy',
-    nsqf_level: 4,
-    eligibility: '10th Class Pass',
-    duration_hours: 350,
-    awarding_body: 'Electronics Sector Skills Council of India (ESSCI)',
-    source_name: 'National Qualification Register (NQR)',
-    source_url: 'https://nqr.gov.in/qualification-title?qCode=ELE/Q5901',
-    last_verified_at: '2026-01-15',
-    score: 92
-  };
-
-  if (desired.includes('tailor') || desired.includes('शिवण') || desired.includes('boutique') || desired.includes('कपडे')) {
-    primaryQual = {
-      id: 'qual-003',
-      qp_code: 'AMH/Q0301',
-      job_role: 'Self Employed Tailor / Custom Garment Maker',
-      sector: 'Apparel & Fashion Technology',
-      nsqf_level: 4,
-      eligibility: '8th Class Pass',
-      duration_hours: 340,
-      awarding_body: 'Apparel Made-ups & Home Furnishing Sector Skill Council',
-      source_name: 'National Qualification Register (NQR)',
-      source_url: 'https://nqr.gov.in/qualification-title?qCode=AMH/Q0301',
-      last_verified_at: '2026-01-10',
-      score: 95
-    };
-  } else if (desired.includes('health') || desired.includes('दवाखाना') || desired.includes('hospital') || desired.includes('patient')) {
-    primaryQual = {
-      id: 'qual-007',
-      qp_code: 'HSS/Q5101',
-      job_role: 'General Duty Assistant / Healthcare Attendant',
-      sector: 'Healthcare & Nursing Support',
-      nsqf_level: 4,
-      eligibility: '10th Class Pass',
-      duration_hours: 480,
-      awarding_body: 'Healthcare Sector Skill Council (HSSC)',
-      source_name: 'National Qualification Register (NQR)',
-      source_url: 'https://nqr.gov.in/qualification-title?qCode=HSS/Q5101',
-      last_verified_at: '2026-02-05',
-      score: 91
-    };
-  } else if (desired.includes('data') || desired.includes('computer') || desired.includes('कॉम्प्युटर') || desired.includes('office')) {
-    primaryQual = {
-      id: 'qual-005',
-      qp_code: 'SSC/Q2212',
-      job_role: 'Domestic Data Entry Operator',
-      sector: 'IT-ITeS / Digital Services',
-      nsqf_level: 4,
-      eligibility: '10th Class Pass',
-      duration_hours: 400,
-      awarding_body: 'IT-ITeS SSC NASSCOM',
-      source_name: 'National Qualification Register (NQR)',
-      source_url: 'https://nqr.gov.in/qualification-title?qCode=SSC/Q2212',
-      last_verified_at: '2026-01-20',
-      score: 93
-    };
-  }
+  const primaryQual = resolveQualification(desired, beneficiary?.existing_skills || [], userEdu);
 
   const explainableReasons = [
     `✓ Directly matches ${userName}'s ambition for ${primaryQual.job_role}`,
@@ -84,11 +25,11 @@ export const RecommendationsPage: React.FC = () => {
   ];
 
   const factors = [
-    { factor: 'Aspiration Match', score: 95, desc: `Direct alignment with ${userName}'s stated goal` },
-    { factor: 'Education Eligibility', score: 90, desc: `Meets entry requirement (${userEdu})` },
-    { factor: 'Local Demand & Jobs', score: 92, desc: `Active placement listings in ${userDistrict}` },
+    { factor: 'Aspiration Match', score: primaryQual.score, desc: `Direct alignment with ${userName}'s stated goal in ${primaryQual.job_role}` },
+    { factor: 'Education Eligibility', score: 92, desc: `Meets entry requirement (${primaryQual.eligibility})` },
+    { factor: 'Local Demand & Jobs', score: 90, desc: `Active PM-AJAY placement listings in ${userDistrict}` },
     { factor: 'Geospatial Distance', score: 88, desc: `Training centre within ${beneficiary?.mobility_km || 15} km` },
-    { factor: 'Skill Transferability', score: 85, desc: `Prior experience (${(beneficiary?.existing_skills || [])[0] || 'practical skills'}) transfers well` }
+    { factor: 'Skill Transferability', score: 85, desc: `Prior experience (${(beneficiary?.existing_skills || [])[0] || 'practical experience'}) transfers well` }
   ];
 
   return (

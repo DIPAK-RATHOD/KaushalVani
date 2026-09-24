@@ -8,9 +8,9 @@ export const TrainingOptionsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const userName = beneficiary?.name || 'Beneficiary User';
-  const userDistrict = beneficiary?.district || 'Aurangabad';
+  const userDistrict = beneficiary?.district || 'Chhatrapati Sambhajinagar';
   const userMobility = beneficiary?.mobility_km || 15;
-  const desiredRole = beneficiary?.desired_occupation || 'Solar Energy & Electrical Installation';
+  const desiredRole = beneficiary?.desired_occupation || 'Vocational & Technical Training';
 
   const [selectedRadius, setSelectedRadius] = useState<number>(userMobility);
 

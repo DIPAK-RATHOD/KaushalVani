@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBeneficiary } from '../context/BeneficiaryContext';
+import { resolveQualification } from '../utils/nqrResolver';
 import { Award, ArrowRight, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 export const SkillGapPage: React.FC = () => {
@@ -8,56 +9,20 @@ export const SkillGapPage: React.FC = () => {
   const navigate = useNavigate();
 
   const userName = beneficiary?.name || 'Beneficiary User';
-  const desired = (beneficiary?.desired_occupation || 'Solar Energy & Electrical Installation');
-  const existingSkills = beneficiary?.existing_skills || ['Basic Farming', 'Hand Tools Handling'];
+  const desired = beneficiary?.desired_occupation || 'Technical & Vocational Skills';
+  const existingSkills = beneficiary?.existing_skills || [];
 
   // Dynamic Skill Gap Matrix based on user's actual desired role
-  let targetQP = 'ELE/Q5901';
-  let targetRole = desired;
-  let targetSector = 'Renewable Energy & Electronics';
-
-  let requiredSkillList = [
-    { skill: 'Technical Component Assembly & Installation', severity: 'High', missing: true },
-    { skill: 'Circuit Cabling & Safety Standard Connection', severity: 'Moderate', missing: true },
-    { skill: 'Multimeter & Equipment Diagnostics', severity: 'High', missing: true },
-    { skill: 'Quality Inspection & Maintenance', severity: 'Moderate', missing: true }
-  ];
-
-  if (desired.toLowerCase().includes('tailor') || desired.toLowerCase().includes('शिवण') || desired.toLowerCase().includes('boutique')) {
-    targetQP = 'AMH/Q0301';
-    targetRole = 'Self Employed Tailor / Custom Garment Maker';
-    targetSector = 'Apparel & Fashion Technology';
-    requiredSkillList = [
-      { skill: 'Industrial Sewing Machine Operations', severity: 'High', missing: !existingSkills.some(s => s.includes('Stitching')) },
-      { skill: 'Pattern Drafting & Precision Cutting', severity: 'High', missing: true },
-      { skill: 'Garment Finishing & Quality Inspection', severity: 'Moderate', missing: true },
-      { skill: 'Costing, Pricing & Client Measurements', severity: 'Moderate', missing: true }
-    ];
-  } else if (desired.toLowerCase().includes('health') || desired.toLowerCase().includes('hospit') || desired.toLowerCase().includes('patient')) {
-    targetQP = 'HSS/Q5101';
-    targetRole = 'General Duty Assistant / Healthcare Attendant';
-    targetSector = 'Healthcare & Nursing Support';
-    requiredSkillList = [
-      { skill: 'Patient Vitals Monitoring & Hygiene Care', severity: 'High', missing: true },
-      { skill: 'First Aid & Emergency Support Operations', severity: 'High', missing: true },
-      { skill: 'Basic Medical Terminology & Record Keeping', severity: 'Moderate', missing: true },
-      { skill: 'Patient Transport & Mobility Assistance', severity: 'Moderate', missing: true }
-    ];
-  } else if (desired.toLowerCase().includes('data') || desired.toLowerCase().includes('computer')) {
-    targetQP = 'SSC/Q2212';
-    targetRole = 'Domestic Data Entry Operator';
-    targetSector = 'IT-ITeS Services';
-    requiredSkillList = [
-      { skill: 'Keyboard Typing Speed (30+ wpm)', severity: 'High', missing: true },
-      { skill: 'MS Office & Google Sheets Data Entry', severity: 'High', missing: true },
-      { skill: 'Data Accuracy Verification & Audit', severity: 'Moderate', missing: true }
-    ];
-  }
+  const resolved = resolveQualification(desired, existingSkills, beneficiary?.education || '10th Class Pass');
+  const targetQP = resolved.qp_code;
+  const targetRole = resolved.job_role;
+  const targetSector = resolved.sector;
+  const requiredSkillList = resolved.missing_skills;
 
   // Append user's existing skills as matched skills
   const matchedSkills = existingSkills.map(s => ({
     skill: `${s} (Captured Experience)`,
-    severity: 'Low',
+    severity: 'Low' as const,
     missing: false
   }));
 
