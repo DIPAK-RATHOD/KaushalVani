@@ -10,14 +10,14 @@ export const ProfileConfirmationPage: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
-    name: beneficiary?.name || 'User',
-    age: beneficiary?.age || 24,
-    district: beneficiary?.district || 'Aurangabad',
-    location: beneficiary?.location || 'Aurangabad District',
+    name: beneficiary?.name || 'Beneficiary',
+    age: beneficiary?.age || 20,
+    district: beneficiary?.district || 'Chhatrapati Sambhajinagar',
+    location: beneficiary?.location || 'District',
     education: beneficiary?.education || '10th Class Pass',
-    current_occupation: beneficiary?.current_occupation || 'Agricultural Laborer',
+    current_occupation: beneficiary?.current_occupation || 'General Worker',
     experience_years: beneficiary?.experience_years || 2,
-    desired_occupation: beneficiary?.desired_occupation || 'Solar Energy & Electrical Installation',
+    desired_occupation: beneficiary?.desired_occupation || 'Skill Training',
     employment_preference: beneficiary?.employment_preference || 'wage',
     mobility_km: beneficiary?.mobility_km || 15
   });
@@ -25,16 +25,16 @@ export const ProfileConfirmationPage: React.FC = () => {
   useEffect(() => {
     if (beneficiary) {
       setFormData({
-        name: beneficiary.name,
-        age: beneficiary.age,
-        district: beneficiary.district,
-        location: beneficiary.location,
-        education: beneficiary.education,
-        current_occupation: beneficiary.current_occupation,
+        name: beneficiary.name || 'Beneficiary',
+        age: beneficiary.age || 20,
+        district: beneficiary.district || 'District',
+        location: beneficiary.location || 'Location',
+        education: beneficiary.education || 'Education',
+        current_occupation: beneficiary.current_occupation || 'Occupation',
         experience_years: beneficiary.experience_years || 2,
-        desired_occupation: beneficiary.desired_occupation,
-        employment_preference: beneficiary.employment_preference,
-        mobility_km: beneficiary.mobility_km
+        desired_occupation: beneficiary.desired_occupation || 'Desired Work',
+        employment_preference: beneficiary.employment_preference || 'wage',
+        mobility_km: beneficiary.mobility_km || 15
       });
     }
   }, [beneficiary]);
@@ -45,7 +45,7 @@ export const ProfileConfirmationPage: React.FC = () => {
       ...beneficiary,
       ...formData,
       id: beneficiary?.id || `ben-${Date.now()}`,
-      existing_skills: beneficiary?.existing_skills || ['Basic Farming', 'Hand Tools Handling'],
+      existing_skills: beneficiary?.existing_skills?.length ? beneficiary.existing_skills : [formData.current_occupation || 'General Work'],
       created_at: beneficiary?.created_at || new Date().toISOString()
     };
 

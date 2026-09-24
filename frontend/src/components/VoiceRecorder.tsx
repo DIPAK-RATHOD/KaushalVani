@@ -327,13 +327,24 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptConfir
           </p>
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <button
-              onClick={() => { setIsEditing(true); setTypedInput(transcript); }}
-              className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center space-x-1 bg-white border border-slate-300 px-3 py-2 rounded shadow-sm"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>दुरूस्त करा (Edit Text)</span>
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => { setTranscript(''); setInterimText(''); setTypedInput(''); setIsEditing(false); }}
+                className="text-xs font-bold text-red-700 hover:text-red-900 flex items-center space-x-1.5 bg-red-50 hover:bg-red-100 border border-red-200 px-3.5 py-2 rounded-md transition cursor-pointer"
+                title="Clear current recording and speak again"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>पुन्हा बोला (Re-record Voice)</span>
+              </button>
+
+              <button
+                onClick={() => { setIsEditing(true); setTypedInput(transcript); }}
+                className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center space-x-1 bg-white border border-slate-300 px-3 py-2 rounded-md shadow-sm"
+              >
+                <PenLine className="w-3.5 h-3.5" />
+                <span>दुरूस्त करा (Edit Text)</span>
+              </button>
+            </div>
 
             <button
               onClick={handleConfirm}

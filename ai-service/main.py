@@ -147,44 +147,72 @@ def extract_profile(req: ProfileExtractionRequest):
   elif "पदवी" in lower_text or "graduate" in lower_text or "college" in lower_text:
     education = "Graduate"
 
-  # 5. Current Occupation & Skills
+  # 5. Current Occupation & Skills (Dynamic Detection)
   if any(kw in lower_text for kw in ["शेती", "खेती", "farm", "agri", "शेतकरी"]):
-    current_occupation = "Agricultural Laborer"
+    current_occupation = current_occupation or "Agricultural Laborer"
     if "Basic Farming" not in skills:
-      skills.extend(["Basic Farming", "Pumphouse Operations", "Hand Tools Handling"])
-  elif any(kw in lower_text for kw in ["शिवण", "कपडे", "tailor", "दर्जी", "stitching"]):
-    current_occupation = "Garment Tailor / Stitcher"
+      skills.extend(["Basic Farming", "Crop Cultivation", "Hand Tools Handling"])
+  elif any(kw in lower_text for kw in ["शिवण", "कपडे", "tailor", "दर्जी", "stitching", "कपड्यांचे"]):
+    current_occupation = current_occupation or "Garment Tailor / Stitcher"
     if "Garment Stitching" not in skills:
-      skills.extend(["Garment Stitching", "Pattern Cutting"])
-  elif any(kw in lower_text for kw in ["गॅरेज", "मॅकेनिक", "garage", "mechanic", "गाडी"]):
-    current_occupation = "Workshop Helper / Mechanic"
+      skills.extend(["Garment Stitching", "Pattern Cutting", "Measurement Taking"])
+  elif any(kw in lower_text for kw in ["गॅरेज", "मॅकेनिक", "garage", "mechanic", "गाडी", "ऑटो"]):
+    current_occupation = current_occupation or "Workshop Helper / Mechanic"
     if "Auto Servicing" not in skills:
-      skills.extend(["Auto Servicing", "Basic Mechanical Repair"])
-  elif any(kw in lower_text for kw in ["दुकान", "शॉप", "shop", "sales", "counter"]):
-    current_occupation = "Shop Assistant"
+      skills.extend(["Auto Servicing", "Basic Mechanical Repair", "Tools Handling"])
+  elif any(kw in lower_text for kw in ["दुकान", "शॉप", "shop", "sales", "counter", "विक्री"]):
+    current_occupation = current_occupation or "Shop Assistant & Sales"
     if "Customer Handling" not in skills:
       skills.extend(["Customer Handling", "Cash Counter Operation"])
+  elif any(kw in lower_text for kw in ["कॉम्प्युटर", "डाटा", "computer", "data", "ऑपरेटर"]):
+    current_occupation = current_occupation or "Computer Data Entry / Assistant"
+    if "Computer Operations" not in skills:
+      skills.extend(["Computer Operations", "Data Entry", "Keyboard Typing"])
+  elif any(kw in lower_text for kw in ["जैविक", "खात", "bio", "organic", "कंपोस्ट", "खत"]):
+    current_occupation = current_occupation or "Organic Bio-Input Farmer"
+    if "Bio-Fertilizer Production" not in skills:
+      skills.extend(["Bio-Fertilizer Production", "Organic Composting", "Soil Health Testing"])
+  elif not current_occupation and len(text) > 3:
+    current_occupation = text
 
-  # 6. Desired Occupation / Aspirations
+  # 6. Desired Occupation / Aspirations (Dynamic Detection)
   if any(kw in lower_text for kw in ["सोलर", "वीज", "बिजली", "solar", "electric", "वायरिंग"]):
     desired_occupation = "Solar Energy & Electrical Installation"
     if "Solar Energy" not in interests:
       interests.extend(["Solar Energy", "Electrical Wiring"])
-  elif any(kw in lower_text for kw in ["शिवणकाम", "बुटीक", "boutique", "fashion", "कपड्यांचा"]):
+  elif any(kw in lower_text for kw in ["शिवणकाम", "बुटीक", "boutique", "fashion", "कपड्यांचा", "टेलरींग"]):
     desired_occupation = "Self-Employed Tailor & Boutique Owner"
     if "Garment Design" not in interests:
       interests.extend(["Garment Design", "Apparel Business"])
-  elif any(kw in lower_text for kw in ["दवाखाना", "हॉस्पिटल", "hospital", "health", "नर्स", "पेशंट"]):
+  elif any(kw in lower_text for kw in ["दवाखाना", "हॉस्पिटल", "hospital", "health", "नर्स", "पेशंट", "आरोग्य"]):
     desired_occupation = "Healthcare Attendant / General Duty Assistant"
     if "Patient Care" not in interests:
       interests.extend(["Patient Care", "Healthcare Support"])
-  elif any(kw in lower_text for kw in ["कॉम्प्युटर", "डाटा", "computer", "data entry", "office"]):
+  elif any(kw in lower_text for kw in ["कॉम्प्युटर", "डाटा", "computer", "data entry", "office", "आयटी"]):
     desired_occupation = "Domestic Data Entry Operator"
     if "Computer Literacy" not in interests:
       interests.extend(["Computer Literacy", "MS Office Operations"])
+  elif any(kw in lower_text for kw in ["जैविक", "ऑर्गेनिक", "bio-input", "organic farm", "खत प्रकल्प"]):
+    desired_occupation = "Organic Farming & Bio-Input Producer"
+    if "Organic Farming" not in interests:
+      interests.extend(["Organic Farming", "Bio-Input Enterprise"])
+  elif any(kw in lower_text for kw in ["ब्यूटी", "पार्लर", "beauty", "parlour", "मेकअप"]):
+    desired_occupation = "Beauty Culture & Hair Dressing Specialist"
+    if "Beauty Care" not in interests:
+      interests.extend(["Beauty Care", "Hair Dressing"])
+  elif any(kw in lower_text for kw in ["फूड", "प्रॉसेसिंग", "अन्न", "लोणचे", "पापड", "food processing"]):
+    desired_occupation = "Food Processing & Micro Enterprise Operator"
+    if "Food Processing" not in interests:
+      interests.extend(["Food Processing", "Quality Hygiene"])
+  elif any(kw in lower_text for kw in ["ड्रायव्हिंग", "चालक", "driver", "driving"]):
+    desired_occupation = "Commercial Vehicle Driver"
+    if "Vehicle Driving" not in interests:
+      interests.extend(["Vehicle Driving", "Road Safety"])
+  elif not desired_occupation and len(text) > 3:
+    desired_occupation = text
 
   # 7. Employment Preference & Mobility
-  if any(kw in lower_text for kw in ["स्वतः", "व्यवसाय", "बिजनेस", "own business", "enterprise", "दुकान काढायचे"]):
+  if any(kw in lower_text for kw in ["स्वतः", "व्यवसाय", "बिजनेस", "own business", "enterprise", "दुकान काढायचे", "उद्योग"]):
     preference = "self_employment"
   elif any(kw in lower_text for kw in ["नोकरी", "job", "काम", "salary", "कंपनी"]):
     preference = "wage"
@@ -194,15 +222,15 @@ def extract_profile(req: ProfileExtractionRequest):
     mobility = int(mob_match.group(1))
 
   return ProfileExtractionResponse(
-      name=name or "Beneficiary User",
-      age=age or 24,
-      location=location or "District Village",
-      district=district or "Aurangabad",
-      education=education or "10th Class Pass",
-      current_occupation=current_occupation or "Agricultural Laborer",
-      desired_occupation=desired_occupation or "Solar Energy & Electrical Installation",
-      existing_skills=skills if skills else ["Basic Farming", "Hand Tools Handling"],
-      interests=interests if interests else ["Solar Energy", "Electrical Wiring"],
+      name=name or current.get("name") or "",
+      age=age or current.get("age") or 0,
+      location=location or current.get("location") or "",
+      district=district or current.get("district") or "",
+      education=education or current.get("education") or "",
+      current_occupation=current_occupation or current.get("current_occupation") or "",
+      desired_occupation=desired_occupation or current.get("desired_occupation") or "",
+      existing_skills=skills if skills else current.get("existing_skills", []),
+      interests=interests if interests else current.get("interests", []),
       employment_preference=preference,
       mobility_km=mobility,
       is_complete=True,
